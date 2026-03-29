@@ -42,4 +42,6 @@ jobs:
           gh label create "product:audio-intelligence" --color "0075ca" --description "Audio Intelligence samples" --force
           gh label create "product:voice-agents"       --color "0075ca" --description "Voice Agents samples" --force
 
+          gh label create "type:docs"     --color "0075ca" --description "Documentation update PR" --force
+
           echo "All labels created successfully."

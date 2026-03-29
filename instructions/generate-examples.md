@@ -269,10 +269,11 @@ gh issue close {issue_number} \
 - Use `aura-2-thalia-en` for TTS examples unless the recipe specifies otherwise
 
 ### File Safety
+- ONLY write files inside `recipes/{language}/{product}/{version}/{slug}/` — the three files for this one recipe
+- NEVER touch README.md, COVERAGE.md, instructions/, .deepgram/, .github/, or any file outside the recipe directory
 - NEVER overwrite an existing `example.*` file — skip and log a warning
-- NEVER modify files outside `recipes/{language}/`
 - NEVER commit to the `main` branch
-- Always work on the feature branch created in Step 5
+- Always work on the feature branch created in Step 5a
 
 ### When Unsure About SDK API
 - Read the SDK README again (Step 4)
