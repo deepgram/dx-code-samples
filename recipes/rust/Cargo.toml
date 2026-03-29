@@ -1,11 +1,50 @@
 [workspace]
-members = []
 resolver = "2"
+members = [
+  "speech-to-text/v1/transcribe-url",
+  "speech-to-text/v1/transcribe-file",
+  "speech-to-text/v1/smart-format",
+  "speech-to-text/v1/punctuate",
+  "speech-to-text/v1/paragraphs",
+  "speech-to-text/v1/utterances",
+  "speech-to-text/v1/diarize",
+  "speech-to-text/v1/multichannel",
+  "speech-to-text/v1/detect-language",
+  "speech-to-text/v1/summarize",
+  "speech-to-text/v1/topics",
+  "speech-to-text/v1/intents",
+  "speech-to-text/v1/sentiment",
+  "speech-to-text/v1/detect-entities",
+  "speech-to-text/v1/redact",
+  "speech-to-text/v1/search",
+  "speech-to-text/v1/keywords",
+  "speech-to-text/v1/streaming",
+  "speech-to-text/v1/streaming-file",
+  "speech-to-text/v2/transcribe-url",
+  "speech-to-text/v2/streaming",
+  "text-to-speech/v1/generate-audio",
+  "text-to-speech/v1/stream-audio",
+  "text-to-speech/v1/websocket-streaming",
+  "text-to-speech/v1/select-model",
+  "text-to-speech/v1/select-encoding",
+  "audio-intelligence/v1/summarize",
+  "audio-intelligence/v1/sentiment",
+  "audio-intelligence/v1/topics",
+  "audio-intelligence/v1/intents",
+  "audio-intelligence/v1/entities",
+  "voice-agents/v1/connect",
+  "voice-agents/v1/custom-llm",
+  "voice-agents/v1/custom-tts",
+  "voice-agents/v1/function-calling",
+]
 
 [workspace.package]
 edition = "2021"
 
 [workspace.dependencies]
-deepgram = { version = "0.6", features = ["full"] }
+deepgram = { version = "0.9", features = ["listen", "speak"] }
 tokio = { version = "1", features = ["full"] }
 serde_json = "1"
+futures = "0.3"
+reqwest = { version = "0.12", default-features = false, features = ["rustls-tls", "stream"] }
+tokio-tungstenite = { version = "0.24", features = ["rustls-tls-webpki-roots"] }
