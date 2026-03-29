@@ -178,7 +178,7 @@ git commit -m "chore: add new SDK features to registry from {sdk} {release-tag}"
 git push origin "$BRANCH"
 ```
 
-4. Create a PR:
+4. Create a PR and enable auto-merge:
 ```bash
 gh pr create \
   --title "chore: update features.json with new {sdk} features" \
@@ -193,6 +193,9 @@ gh pr create \
 {list of release tags and dates analysed}
 EOF
 )"
+
+# Enable auto-merge — merges once all checks pass
+gh pr merge --auto --squash --subject "chore: update features.json with new {sdk} features"
 ```
 
 ---

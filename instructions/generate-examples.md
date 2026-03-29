@@ -787,7 +787,16 @@ PR_BODY
 )"
 ```
 
-Capture the PR URL from the output. Log it.
+Capture the PR URL from the output. Then immediately enable auto-merge:
+
+```bash
+# Enable auto-merge — the PR will merge automatically once all test checks pass.
+# Requires "Allow auto-merge" to be enabled in repository Settings → General.
+gh pr merge --auto --squash --subject "feat({language}): add {product} {version} recipes"
+```
+
+The PR will stay open until the language-specific test workflow runs and passes.
+If tests fail, the PR remains open for investigation — do not force-merge.
 
 ---
 
