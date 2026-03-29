@@ -176,6 +176,35 @@ Requirements:
 - Use async where appropriate (streaming, voice agents, TTS with streaming output)
 - Keep it simple and readable — this is a teaching example
 
+**Commenting standard — this is critical:**
+
+Comments serve both human readers and future agents updating the recipe. Include ALL of:
+
+1. **Module docstring** — name the recipe, state what feature it demonstrates, and describe
+   how the output differs from the baseline (e.g., "Without X: flat string. With X: blocks.").
+   If there are related recipes in sibling directories, name them.
+
+2. **Feature-enabling parameter** — mark the one parameter that is the point of this recipe
+   with an inline comment: `param=True,  # <-- THIS is the feature this recipe demonstrates`
+
+3. **Response path comment** — explain exactly where the feature's output lives in the
+   response object and what fields are available, e.g.:
+   ```
+   # alt.paragraphs.paragraphs  — list of paragraph objects
+   #   para.sentences           — list of sentence objects
+   #     sentence.text          — the sentence string
+   #     sentence.start/end     — timing in seconds
+   ```
+
+4. **Edge case comments** — note conditions where the feature may not return data
+   (e.g., "paragraphs can be absent if audio is too short").
+
+5. **Optional parameter hints** — in a comment near the API call, list 2-3 other parameters
+   a user might want to try for this recipe.
+
+Agents updating this recipe later must be able to understand what is boilerplate vs
+what is specific to this recipe's feature, purely from reading the comments.
+
 **Python (`example.py`) — SDK v6+ API:**
 
 `DeepgramClient()` with no args reads `DEEPGRAM_API_KEY` from the environment automatically.
