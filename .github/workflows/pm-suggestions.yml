@@ -3,10 +3,10 @@ name: PM — Suggestions
 on:
   issues:
     types:
-      - opened
-      - labeled
+      - opened        # Every new issue, regardless of labels or format
+      - reopened
   schedule:
-    - cron: '47 * * * *'  # Hourly sweep for any unreviewed suggestions
+    - cron: '47 * * * *'   # Hourly sweep to catch anything missed
   workflow_dispatch:
 
 concurrency:
@@ -15,12 +15,7 @@ concurrency:
 
 jobs:
   run:
-    # Only run when a suggestion issue is involved, or on schedule/dispatch
-    if: >
-      github.event_name == 'schedule' ||
-      github.event_name == 'workflow_dispatch' ||
-      (github.event_name == 'issues' && 
-       contains(github.event.issue.labels.*.name, 'type:suggestion'))
+    # Always run — PM reads the issue and decides what to do with it
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -37,16 +32,22 @@ jobs:
           git config user.name "recipes-bot"
           git config user.email "noreply@deepgram.com"
 
-      - name: Review suggestions
+      - name: Route issue
         uses: anthropics/claude-code-action@beta
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
           mode: agent
           model: claude-opus-4-6
-          allowed_tools: "Bash,Read,Write,Edit,Glob,Grep"
+          allowed_tools: "Bash,Read,Write,Edit,Glob,Grep,WebSearch,WebFetch"
           timeout_minutes: 15
-          direct_prompt: "Read and execute instructions/pm-suggestions.md"
+          direct_prompt: |
+            Read and execute instructions/pm-suggestions.md.
+
+            Context:
+            - Event: ${{ github.event_name }}
+            - Issue number (if triggered by issue): ${{ github.event.issue.number }}
+            - Repository: ${{ github.repository }}
         env:
           KAPA_API_KEY: ${{ secrets.KAPA_API_KEY }}
           KAPA_PROJECT_ID: ${{ vars.KAPA_PROJECT_ID }}

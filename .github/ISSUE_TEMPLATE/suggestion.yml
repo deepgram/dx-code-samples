@@ -1,12 +1,21 @@
-name: Suggest a Recipe
-description: Got an idea? Tell us what you want to see.
-labels: ["type:suggestion"]
+name: Suggest anything
+description: Request a recipe, report a broken one, or share any idea — write whatever feels natural
 body:
   - type: textarea
     id: suggestion
     attributes:
-      label: What would you like to see?
-      description: Describe it however you like — a use case, a feature, a question, anything.
-      placeholder: "e.g. I want to see how to do real-time transcription with speaker labels in Python"
+      label: What's on your mind?
+      description: No format required. Could be a feature request, bug report, or rough idea.
+      placeholder: |
+        Examples of things that work:
+        - "show me how to do diarization in Python"
+        - "the paragraphs recipe crashes when I run it"
+        - "would be great to have a streaming TTS example in Go"
+        - "how do I use Deepgram with Rust?"
     validations:
       required: true
+  - type: input
+    id: context
+    attributes:
+      label: Any extra context? (optional)
+      description: Language preference, SDK version, error messages, links, etc.
