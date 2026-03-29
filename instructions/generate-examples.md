@@ -793,9 +793,13 @@ Capture the PR URL from the output. Then immediately enable auto-merge:
 # Enable auto-merge — the PR will merge automatically once all test checks pass.
 # Requires "Allow auto-merge" to be enabled in repository Settings → General.
 gh pr merge --auto --squash --subject "feat({language}): add {product} {version} recipes"
+
+# Bot-created PRs do not fire pull_request events (GitHub blocks workflow→workflow chains).
+# Explicitly trigger the E2E check on this branch so the required status check runs.
+gh workflow run e2e.yml --ref "$BRANCH"
 ```
 
-The PR will stay open until the language-specific test workflow runs and passes.
+The E2E check will run on the branch. When it passes the PR auto-merges.
 If tests fail, the PR remains open for investigation — do not force-merge.
 
 ---
