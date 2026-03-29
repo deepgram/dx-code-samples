@@ -1,0 +1,3 @@
+# Workflow files require human review — agents must never modify these.
+# Any PR touching .github/ will require approval from @deepgram/dx.
+.github/ @deepgram/dx
