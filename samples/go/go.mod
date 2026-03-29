@@ -1,4 +1,4 @@
-module github.com/deepgram/dx-code-samples/go
+module github.com/deepgram/dx-recipes/go
 
 go 1.22
 

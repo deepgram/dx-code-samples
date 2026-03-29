@@ -34,8 +34,9 @@ Take the FIRST (oldest) issue from the list.
 Inspect its labels to determine the required action:
 
 - If it has the label `action:generate` → proceed to **Step 3: Execute Generate**
-- If it has the label `action:new-sdk` → proceed to **Step 4: Surface New SDK for Review**
-- If neither label is present → output a warning and skip:
+- If it has the label `action:update`   → proceed to **Step 4: Execute Update**
+- If it has the label `action:new-sdk`  → proceed to **Step 5: Surface New SDK for Review**
+- If none of the above → output a warning and skip:
   ```
   [WARN] Issue #{number} has type:queue but no recognized action label. Skipping.
   ```
@@ -62,7 +63,22 @@ After executing generate-examples.md, return here and output a summary of what w
 
 ---
 
-## Step 4: Surface New SDK for Review
+## Step 4: Execute Update
+
+Read and fully execute the instructions in `instructions/update-recipes.md`.
+
+That instruction will:
+1. Find the triggering queue:update issue
+2. Read the recipe that needs updating
+3. Fetch the SDK's new API patterns
+4. Apply the changes and open a PR
+5. Close the queue issue
+
+After executing update-recipes.md, return here and output a summary of what was done.
+
+---
+
+## Step 5: Surface New SDK for Review
 
 For `action:new-sdk` issues, do NOT auto-process. Instead, output a formatted summary for
 the human who will review it:

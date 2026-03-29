@@ -23,6 +23,7 @@ jobs:
           gh label create "type:queue"    --color "e4e669" --description "Issue is in the automation queue" --force
           gh label create "type:samples"  --color "0075ca" --description "Pull request adds or updates code samples" --force
           gh label create "action:generate" --color "d93f0b" --description "Queue action: generate code examples" --force
+          gh label create "action:update"   --color "e99695" --description "Queue action: update existing recipe for SDK changes" --force
           gh label create "action:new-sdk"  --color "e4e669" --description "Queue action: new SDK discovered, needs human review" --force
           gh label create "action:fix"      --color "d93f0b" --description "Queue action: fix incomplete recipe directory" --force
 
