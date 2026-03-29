@@ -102,6 +102,61 @@ constructor, and method names for the SDK version specified in the issue.
 
 ---
 
+## Step 4b: Search Kapa for Current Documentation
+
+Kapa indexes Deepgram's live documentation. Search it for each recipe you are about
+to generate — the results reflect the current API surface more reliably than SDK READMEs,
+and the **most recently updated sources are the most relevant**.
+
+```bash
+kapa_search() {
+  local query="$1"
+  curl -s -L "https://api.kapa.ai/query/v1/projects/${KAPA_PROJECT_ID}/retrieval/" \
+    -H "Content-Type: application/json" \
+    -H "Accept: application/json" \
+    -H "X-API-KEY: ${KAPA_API_KEY}" \
+    -d "{\"query\": \"$(echo "$query" | sed 's/"/\\\\"/g')\", \"top_k\": 15, \"redact_query\": false}" \
+    | jq -r '
+        .sources
+        | sort_by(.updated_at)
+        | reverse
+        | .[:5][]
+        | "--- " + .title + " ---\n" + "URL: " + .url + "\n" + .content
+      ' 2>/dev/null
+}
+```
+
+Run one search per recipe you plan to generate. Tailor the query to the feature:
+
+```bash
+# For each recipe, search with a targeted query:
+
+# Operations (transcribe, generate audio, etc.)
+kapa_search "deepgram {language} SDK {operation} example code {product}"
+
+# Feature flags (paragraphs, diarize, smart_format, etc.)
+kapa_search "deepgram {feature} parameter {product} API {language}"
+
+# Streaming recipes
+kapa_search "deepgram {language} SDK live streaming websocket {product}"
+```
+
+**How to use the results:**
+
+- **Response structure** — if the docs show a different response path than you expected,
+  use what the docs say. Copy exact field names from examples in the results.
+- **Parameter names** — prefer the exact spelling from Kapa results over any guesses.
+  SDK parameter names can differ subtly between languages (e.g., `smart_format` vs `smartFormat`).
+- **Code snippets** — treat Kapa-returned code as the authoritative pattern for that language.
+  Adapt it to fit the recipe's < 50-line constraint, then add the commenting standard.
+- **Conflicting results** — if Kapa and the SDK README disagree, prefer Kapa (it reflects
+  the deployed API) and note the discrepancy in the recipe's README.
+
+If `KAPA_API_KEY` or `KAPA_PROJECT_ID` is unset, skip this step and rely on the SDK README
+alone — do not abort.
+
+---
+
 ## Step 5: Create a Feature Branch
 
 ```bash

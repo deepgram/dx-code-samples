@@ -38,3 +38,6 @@ jobs:
           allowed_tools: "Bash,Read,Write,Edit,Glob,Grep"
           timeout_minutes: 25
           direct_prompt: "Read and execute instructions/process-queue.md"
+        env:
+          KAPA_API_KEY: ${{ secrets.KAPA_API_KEY }}
+          KAPA_PROJECT_ID: ${{ vars.KAPA_PROJECT_ID }}

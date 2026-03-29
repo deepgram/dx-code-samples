@@ -8,6 +8,35 @@ Run weekly. Be thorough — Deepgram ships frequently.
 
 ---
 
+## Kapa Search Helper
+
+Kapa indexes Deepgram's live documentation. Use this function throughout the review
+to cross-reference release notes against published docs. The most recently updated
+sources are the most relevant — results are sorted newest-first.
+
+```bash
+kapa_search() {
+  local query="$1"
+  curl -s -L "https://api.kapa.ai/query/v1/projects/${KAPA_PROJECT_ID}/retrieval/" \
+    -H "Content-Type: application/json" \
+    -H "Accept: application/json" \
+    -H "X-API-KEY: ${KAPA_API_KEY}" \
+    -d "{\"query\": \"$(echo "$query" | sed 's/"/\\\\"/g')\", \"top_k\": 15, \"redact_query\": false}" \
+    | jq -r '
+        .sources
+        | sort_by(.updated_at)
+        | reverse
+        | .[:5][]
+        | "--- " + .title + " ---\n" + "URL: " + .url + "\n" + .content
+      ' 2>/dev/null
+}
+```
+
+Call `kapa_search` in Steps 4 and 5 below to verify findings against live docs.
+If `KAPA_API_KEY` or `KAPA_PROJECT_ID` is unset, skip Kapa calls and rely on release notes alone.
+
+---
+
 ## Step 1: Set Time Window
 
 Compute the date 60 days ago (check releases within this window):
@@ -74,6 +103,26 @@ Indicators: "deprecated", "removed", "breaking change", "renamed", "migration",
 
 ### C. New API versions
 Indicators: `v2`, `v3`, new base URL, versioned endpoint.
+
+After identifying candidate findings from release notes, **verify each one against Kapa**
+before treating it as confirmed. Release notes can be vague or ahead of the published docs:
+
+```bash
+# For each candidate new feature or changed API found in release notes:
+kapa_search "deepgram {feature_name} {product} API"
+
+# For new model names:
+kapa_search "deepgram {model_name} model speech-to-text"
+
+# For deprecation verification:
+kapa_search "deepgram {old_method_name} deprecated migration"
+```
+
+- If Kapa **confirms** the feature with documentation → treat as confirmed, proceed.
+- If Kapa **does not mention** it yet → it may be too new. Note it as "pending docs" and
+  still create the queue issue, but mark `reason: pending-docs` in the metadata block.
+- If Kapa shows the feature was **actually shipped earlier** → check whether features.json
+  already has it before creating a duplicate.
 
 ---
 
