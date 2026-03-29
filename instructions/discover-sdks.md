@@ -1,5 +1,13 @@
 # Instruction: Discover SDKs and Queue Missing Recipes
 
+> ⛔ **HARD RULE: Never create, edit, or delete any file under `.github/`.**
+> Workflow files are owned by humans. Agents that touch workflow files will be
+> blocked by GitHub (GITHUB_TOKEN lacks the required `workflow` OAuth scope)
+> and the change will be rejected. Only modify files under `samples/` and
+> `instructions/`.
+
+
+
 You are an autonomous agent maintaining a Deepgram code samples repository. Your job is to find
 coverage gaps in `samples/` and create GitHub Issues to queue generation of missing recipes.
 You must also detect new Deepgram SDK repositories that are not yet tracked.

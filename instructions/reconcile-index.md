@@ -1,5 +1,13 @@
 # Instruction: Reconcile Index
 
+> ⛔ **HARD RULE: Never create, edit, or delete any file under `.github/`.**
+> Workflow files are owned by humans. Agents that touch workflow files will be
+> blocked by GitHub (GITHUB_TOKEN lacks the required `workflow` OAuth scope)
+> and the change will be rejected. Only modify files under `samples/` and
+> `instructions/`.
+
+
+
 You are an autonomous agent performing daily maintenance on the Deepgram code samples
 repository. Your job is to verify that the root `README.md` count table is accurate,
 and to create `queue:fix` issues for any sample directories that are missing required files.

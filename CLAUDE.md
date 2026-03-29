@@ -48,6 +48,29 @@ This repository is managed by GitHub Actions workflows:
 
 All autonomous logic lives in `instructions/*.md` — read these before modifying behavior.
 
+## Test exit code convention
+
+Shared with `deepgram/examples` — every test in this repo MUST follow this:
+
+| Exit code | Meaning |
+|-----------|---------|
+| `0` | All tests passed |
+| `1` | Real test failure (code bug, assertion error, unexpected output) |
+| `2` | Missing credentials — expected in CI until secrets are configured |
+
+Tests MUST check for missing credentials (read from `.env.example`) BEFORE running
+the example. If any required variable is unset, print `MISSING_CREDENTIALS: VAR1,VAR2`
+to stderr and exit with code 2. CI workflows treat exit 2 as "needs configuration"
+not as a failure, and tag the relevant team for secret setup.
+
+Every recipe directory MUST include a `.env.example` file listing all required env vars.
+
+## Agents must never edit workflow files
+
+Never create, edit, or delete any file under `.github/`. `GITHUB_TOKEN` lacks the
+`workflow` OAuth scope and will be blocked from pushing such changes.
+Only modify files under `samples/` and `instructions/`.
+
 ## Conventional commits
 
 Follow conventional commits: `feat(python): add speech-to-text v1 paragraphs recipe`

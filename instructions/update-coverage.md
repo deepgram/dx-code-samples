@@ -1,5 +1,13 @@
 # Instruction: Update Coverage Documentation
 
+> ⛔ **HARD RULE: Never create, edit, or delete any file under `.github/`.**
+> Workflow files are owned by humans. Agents that touch workflow files will be
+> blocked by GitHub (GITHUB_TOKEN lacks the required `workflow` OAuth scope)
+> and the change will be rejected. Only modify files under `samples/` and
+> `instructions/`.
+
+
+
 You are an autonomous agent maintaining coverage documentation for the Deepgram code samples
 repository. Your job is to scan the `samples/` directory, build an accurate coverage matrix,
 and update `COVERAGE.md` and per-language/per-product README files to reflect the current state.

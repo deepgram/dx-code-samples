@@ -1,5 +1,13 @@
 # Instruction: Generate Recipe Examples
 
+> ⛔ **HARD RULE: Never create, edit, or delete any file under `.github/`.**
+> Workflow files are owned by humans. Agents that touch workflow files will be
+> blocked by GitHub (GITHUB_TOKEN lacks the required `workflow` OAuth scope)
+> and the change will be rejected. Only modify files under `samples/` and
+> `instructions/`.
+
+
+
 You are an autonomous agent generating runnable Deepgram SDK code samples. Your job is to read
 a `queue:generate` GitHub Issue, determine which recipe files are missing for a given language,
 and generate high-quality, runnable examples for each one.
@@ -317,20 +325,20 @@ asyncio.run(main())
 
 **JavaScript (`example.js`):**
 ```javascript
-import { createClient } from "@deepgram/sdk";
+// SDK v5: DeepgramClient (class) replaces createClient (function) from v3/v4.
+// All options are flat in a single object — no separate second argument.
+// v5 throws on error (no { result, error } destructuring).
+import { DeepgramClient } from "@deepgram/sdk";
 
-const client = createClient(process.env.DEEPGRAM_API_KEY);
+const client = new DeepgramClient({ apiKey: process.env.DEEPGRAM_API_KEY });
 
 async function main() {
-  const { result, error } = await client.listen.prerecorded.transcribeUrl(
-    { url: "https://dpgr.am/spacewalk.wav" },
-    {
-      model: "nova-3",
-      // feature-specific options
-    }
-  );
-  if (error) throw error;
-  console.log(result.results.channels[0].alternatives[0].transcript);
+  const data = await client.listen.v1.media.transcribeUrl({
+    url: "https://dpgr.am/spacewalk.wav",
+    model: "nova-3",
+    // feature-specific options (smart_format, diarize, etc.)
+  });
+  console.log(data.results.channels[0].alternatives[0].transcript);
 }
 
 main().catch(console.error);
@@ -523,19 +531,55 @@ If the templates above conflict with the SDK README, ALWAYS prefer the SDK READM
 
 ---
 
-#### File 2: `example_test.{ext}` — The test
+#### File 2: `.env.example` — Required credentials list
 
-The test must:
-- Run the example as a subprocess (or equivalent)
-- Assert that the exit code is 0 (success)
-- Assert that stdout is non-empty
-- Not mock the Deepgram API — it runs for real using `DEEPGRAM_API_KEY` from the environment
+Every recipe MUST include a `.env.example` file listing all required environment variables
+(no values, just names). This documents what secrets a developer needs and lets CI detect
+missing credentials gracefully.
+
+```
+# Deepgram — https://console.deepgram.com/
+DEEPGRAM_API_KEY=
+```
+
+Add extra lines for any other services the recipe requires (rare for single-SDK recipes).
+
+---
+
+#### File 3: `example_test.{ext}` — The test
+
+**Exit code convention (shared with dx-examples):**
+- `0` — tests passed
+- `1` — real failure (code bug, assertion error, unexpected API response)
+- `2` — missing credentials (expected in CI until secrets are configured — NOT a code bug)
+
+The test MUST:
+1. Check for missing credentials FIRST, before running anything, and exit 2 if any are absent
+2. Run the example as a subprocess
+3. Assert that the exit code is 0
+4. Assert that stdout is non-empty
+5. Not mock the Deepgram API — it runs for real using `DEEPGRAM_API_KEY` from the environment
 
 **Python (`example_test.py`):**
 ```python
 import os
 import subprocess
 from pathlib import Path
+
+# ── Credential check ────────────────────────────────────────────────────────
+# Exit 2 = missing credentials (expected in CI). Not a test failure.
+env_example = Path(__file__).parent / ".env.example"
+required = [
+    line.split("=")[0].strip()
+    for line in env_example.read_text().splitlines()
+    if line.strip() and not line.startswith("#") and "=" in line
+]
+missing = [k for k in required if not os.environ.get(k)]
+if missing:
+    import sys
+    print(f"MISSING_CREDENTIALS: {','.join(missing)}", file=sys.stderr)
+    sys.exit(2)
+# ────────────────────────────────────────────────────────────────────────────
 
 
 def test_example_runs():
@@ -557,10 +601,24 @@ def test_example_runs():
 import { describe, it } from "node:test";
 import { ok } from "node:assert";
 import { execSync } from "node:child_process";
-import { dirname } from "node:path";
+import { readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
+
+// ── Credential check ──────────────────────────────────────────────────────
+// Exit 2 = missing credentials (expected in CI). Not a test failure.
+const required = readFileSync(join(__dirname, ".env.example"), "utf8")
+  .split("\n")
+  .filter(l => /^[A-Z][A-Z0-9_]+=/.test(l.trim()))
+  .map(l => l.split("=")[0].trim());
+const missing = required.filter(k => !process.env[k]);
+if (missing.length > 0) {
+  process.stderr.write(`MISSING_CREDENTIALS: ${missing.join(",")}\n`);
+  process.exit(2);
+}
+// ─────────────────────────────────────────────────────────────────────────
 
 describe("example", () => {
   it("runs without error and produces output", () => {

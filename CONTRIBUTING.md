@@ -27,11 +27,25 @@ samples/{language}/{product}/{version}/{recipe-slug}/
 - Print meaningful output (transcript text, file size, etc.)
 - Keep under 50 lines
 
+**`.env.example`:**
+- List every required environment variable, one per line, with no values
+- Minimum: `DEEPGRAM_API_KEY=`
+- Documents what secrets a developer needs before running
+
 **`example_test.{ext}`:**
+- Check for missing credentials FIRST — exit with code `2` if any are absent
+  (code `2` = "missing credentials, not a code bug" — CI handles this gracefully)
 - Run the example as a subprocess
 - Assert exit code == 0
 - Assert stdout is non-empty
 - Set a 60-second timeout
+
+**Exit code convention (shared with deepgram/examples):**
+| Code | Meaning |
+|------|---------|
+| `0` | All tests passed |
+| `1` | Real failure (code bug, assertion error) |
+| `2` | Missing credentials — expected in CI until secrets are configured |
 
 **`README.md`:**
 - Explain what the feature does

@@ -1,5 +1,13 @@
 # Instruction: Process Queue Issues
 
+> ⛔ **HARD RULE: Never create, edit, or delete any file under `.github/`.**
+> Workflow files are owned by humans. Agents that touch workflow files will be
+> blocked by GitHub (GITHUB_TOKEN lacks the required `workflow` OAuth scope)
+> and the change will be rejected. Only modify files under `samples/` and
+> `instructions/`.
+
+
+
 You are an autonomous agent that routes open GitHub queue issues to the appropriate handler.
 Your job is to read the oldest open queue issue, determine what action it requires, and
 either execute that action or surface it for human review.
