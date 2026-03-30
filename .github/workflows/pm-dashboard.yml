@@ -109,19 +109,28 @@ jobs:
       - name: Open PR if README changed
         run: |
           if ! git diff --quiet README.md; then
-            BRANCH="chore/recipe-table-$(date +%Y%m%d-%H%M)"
-            git checkout -b "$BRANCH"
+            BRANCH="pm/recipe-table"
+            git checkout -B "$BRANCH"
             git add README.md
             git commit -m "docs: update recipe table"
-            git push origin "$BRANCH"
-            PR_URL=$(gh pr create \
-              --base main \
-              --head "$BRANCH" \
-              --title "docs: update recipe table" \
-              --body "Automated hourly update of the recipe coverage table in README.md.")
-            gh pr merge "$PR_URL" --auto --squash
-            # Bot-created PRs don't fire pull_request events — trigger E2E explicitly
-            gh workflow run e2e.yml --ref "$BRANCH"
+            git push origin "$BRANCH" --force
+
+            # Use a fixed branch so there is never more than one open PR.
+            # Force-push updates it in place; create only if none exists.
+            EXISTING=$(gh pr list --head "$BRANCH" --state open --json number --jq '.[0].number // empty')
+            if [ -z "$EXISTING" ]; then
+              PR_URL=$(gh pr create \
+                --base main \
+                --head "$BRANCH" \
+                --title "docs: update recipe table" \
+                --body "Automated update of the recipe coverage table in README.md.")
+              gh pr merge "$PR_URL" --auto --squash
+            else
+              echo "Updated existing PR #$EXISTING"
+            fi
+
+            # Always re-trigger E2E (required check for merge)
+            gh workflow run lead-e2e.yml --ref "$BRANCH"
           else
             echo "README unchanged — nothing to do."
           fi
