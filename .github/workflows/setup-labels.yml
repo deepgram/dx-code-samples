@@ -50,5 +50,7 @@ jobs:
           gh label create "suggestion:declined"    --color "e4e669" --description "Suggestion declined (can be re-submitted)" --force
           gh label create "suggestion:duplicate"   --color "cfd3d7" --description "Suggestion already covered" --force
           gh label create "needs-clarification"    --color "e99695" --description "Needs more information before review" --force
+          gh label create "status:fix-needed"      --color "d93f0b" --description "Failing checks — needs a fix" --force
+          gh label create "status:vp-escalated"    --color "b60205" --description "Escalated to devrel by VP oversight" --force
 
           echo "All labels created successfully."
