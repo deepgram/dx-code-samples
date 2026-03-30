@@ -2,7 +2,7 @@ name: VP — Oversight
 
 on:
   schedule:
-    - cron: '*/30 * * * *'  # Every 30 minutes
+    - cron: '17 */4 * * *'   # Every 4 hours at :17
   workflow_dispatch:
 
 concurrency:
@@ -23,13 +23,32 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Run oversight
+      - name: Configure git
+        run: |
+          git config user.name "recipes-bot"
+          git config user.email "noreply@deepgram.com"
+
+      - name: Get date
+        id: date
+        run: echo "date=$(date -u +%Y-%m-%d)" >> $GITHUB_OUTPUT
+
+      - name: Run VP instruction
         uses: anthropics/claude-code-action@beta
+        env:
+          KAPA_API_KEY: ${{ secrets.KAPA_API_KEY }}
+          KAPA_PROJECT_ID: ${{ vars.KAPA_PROJECT_ID }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
           mode: agent
           model: claude-opus-4-6
           allowed_tools: "Bash,Read,Glob,Grep"
           timeout_minutes: 20
-          direct_prompt: "Read and execute instructions/vp.md"
+          direct_prompt: |
+            Read and execute instructions/vp.md.
+
+            Context:
+            - Today's date: ${{ steps.date.outputs.date }}
+            - Repository: ${{ github.repository }}
+            - Run ID: ${{ github.run_id }}
+            - Server URL: ${{ github.server_url }}
