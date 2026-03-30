@@ -5,6 +5,7 @@ on:
     types:
       - opened        # Every new issue, regardless of labels or format
       - reopened
+      - labeled       # Re-process when devrel adds 'approved' to external issues
   schedule:
     - cron: '47 * * * *'   # Hourly sweep to catch anything missed
   workflow_dispatch:
@@ -15,7 +16,6 @@ concurrency:
 
 jobs:
   run:
-    # Always run — PM reads the issue and decides what to do with it
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -32,7 +32,80 @@ jobs:
           git config user.name "recipes-bot"
           git config user.email "noreply@deepgram.com"
 
+      # ── Permission gate ──────────────────────────────────────────────────
+      - name: Check write permission
+        id: permission
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          EVENT="${{ github.event_name }}"
+          USERNAME="${{ github.event.issue.user.login }}"
+
+          if [[ "$EVENT" == "schedule" || "$EVENT" == "workflow_dispatch" ]]; then
+            echo "gate=pass" >> $GITHUB_OUTPUT
+            echo "reason=scheduled" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          LABEL="${{ github.event.label.name }}"
+          if [[ "$EVENT" == "issues" && "$LABEL" == "approved" ]]; then
+            echo "gate=pass" >> $GITHUB_OUTPUT
+            echo "reason=devrel-approved" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          HAS_APPROVED=$(gh issue view ${{ github.event.issue.number }} \
+            --repo ${{ github.repository }} \
+            --json labels --jq '[.labels[].name] | contains(["approved"])' 2>/dev/null || echo "false")
+          if [[ "$HAS_APPROVED" == "true" ]]; then
+            echo "gate=pass" >> $GITHUB_OUTPUT
+            echo "reason=already-approved" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          if [[ "$USERNAME" == *"[bot]"* ]]; then
+            echo "gate=skip" >> $GITHUB_OUTPUT
+            echo "reason=bot" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          PERM=$(gh api "repos/${{ github.repository }}/collaborators/${USERNAME}/permission" \
+            --jq '.permission' 2>/dev/null || echo "none")
+          echo "Permission for $USERNAME: $PERM"
+
+          if [[ "$PERM" == "write" || "$PERM" == "maintain" || "$PERM" == "admin" ]]; then
+            echo "gate=pass" >> $GITHUB_OUTPUT
+            echo "reason=has-write-access" >> $GITHUB_OUTPUT
+          else
+            echo "gate=hold" >> $GITHUB_OUTPUT
+            echo "reason=no-write-access" >> $GITHUB_OUTPUT
+            echo "username=$USERNAME" >> $GITHUB_OUTPUT
+          fi
+
+      # ── Hold: tag devrel for external suggestions ──────────────────────
+      - name: Hold for devrel approval
+        if: steps.permission.outputs.gate == 'hold'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          USERNAME="${{ steps.permission.outputs.username }}"
+          ISSUE="${{ github.event.issue.number }}"
+
+          ALREADY=$(gh issue view "$ISSUE" --repo ${{ github.repository }} \
+            --json labels --jq '[.labels[].name] | contains(["needs:approval"])' 2>/dev/null || echo "false")
+          if [[ "$ALREADY" == "true" ]]; then
+            exit 0
+          fi
+
+          gh issue edit "$ISSUE" --repo ${{ github.repository }} \
+            --add-label "needs:approval" 2>/dev/null || true
+
+          BODY="@deepgram-devrel — new suggestion from @${USERNAME} (no write access). Add the \`approved\` label to process it, or close to decline."
+          gh issue comment "$ISSUE" --repo ${{ github.repository }} --body "$BODY"
+
+      # ── Pass: run PM agent ────────────────────────────────────────────
       - name: Route issue
+        if: steps.permission.outputs.gate == 'pass'
         uses: anthropics/claude-code-action@beta
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
@@ -48,6 +121,7 @@ jobs:
             - Event: ${{ github.event_name }}
             - Issue number (if triggered by issue): ${{ github.event.issue.number }}
             - Repository: ${{ github.repository }}
+            - Trigger reason: ${{ steps.permission.outputs.reason }}
         env:
           KAPA_API_KEY: ${{ secrets.KAPA_API_KEY }}
           KAPA_PROJECT_ID: ${{ vars.KAPA_PROJECT_ID }}
