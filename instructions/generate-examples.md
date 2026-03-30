@@ -290,3 +290,46 @@ gh issue close {issue_number} \
 - Look at the SDK's examples directory for the specific feature
 - Check the SDK's CHANGELOG or release notes for the version in the issue
 - If the API is still unclear after checking the SDK, skip the recipe and add a comment in the PR noting which recipe needs manual review
+
+### CLI recipes must use `dg` — NOT curl
+
+The CLI language uses the official Deepgram CLI (`pip install deepctl`).
+Commands: `dg` (or `deepctl` / `deepgram` — all aliases).
+
+**STT (pre-recorded):**
+```bash
+dg listen https://dpgr.am/spacewalk.wav --model nova-3 --smart-format
+dg listen audio.wav --diarize
+dg listen audio.wav --paragraphs
+dg listen audio.wav --summarize --topics --sentiment
+dg listen audio.wav -o json | jq '.results.channels[0].alternatives[0].transcript'
+```
+
+**STT (streaming from file — no microphone, so CI can run it):**
+```bash
+ffmpeg -i audio.wav -f s16le -ar 16000 -ac 1 -loglevel quiet - \
+  | dg listen --encoding linear16 --model nova-3 --smart-format
+```
+
+**TTS:**
+```bash
+dg speak "Hello from Deepgram" -o output.mp3
+dg speak "Hello" -m aura-2-thalia-en -o output.mp3
+```
+
+**Audio intelligence (--summarize / --topics / --sentiment / --intents on dg listen):**
+```bash
+dg listen audio.wav --summarize --topics --intents --sentiment --model nova-3
+```
+
+**Standard test pattern (`example_test.sh`):**
+```bash
+#!/usr/bin/env bash
+set -e
+OUTPUT=$(bash example.sh)
+[ -z "$OUTPUT" ] && echo "FAIL: no output" && exit 1
+echo "PASS: $OUTPUT"
+```
+
+NEVER use curl in CLI recipes. If you find yourself writing a curl command,
+stop and find the equivalent `dg` subcommand instead.
