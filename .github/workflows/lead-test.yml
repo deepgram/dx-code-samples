@@ -74,12 +74,12 @@ jobs:
 
           # For CLI: identify the specific recipe dirs to test (scoped to changed recipes on PR)
           if [ "${{ github.event_name }}" = "pull_request" ]; then
-            CLI_DIRS=$(echo "$CHANGED" | grep '^recipes/cli/' | cut -d/ -f1-5 | sort -u | tr '\n' ' ' | xargs)
+            CLI_DIRS=$(echo "$CHANGED" | grep '^recipes/cli/' | cut -d/ -f1-5 | sort -u | tr '\n' ' ' | xargs || true)
           else
-            CLI_DIRS=$(find recipes/cli -name "example_test.sh" -exec dirname {} \; 2>/dev/null | sort | tr '\n' ' ' | xargs || echo "")
+            CLI_DIRS=$(find recipes/cli -name "example_test.sh" -exec dirname {} \; 2>/dev/null | sort | tr '\n' ' ' | xargs || true)
           fi
           echo "cli_recipe_dirs=${CLI_DIRS}" >> $GITHUB_OUTPUT
-          [ -n "$CLI_DIRS" ] && echo "CLI recipe dirs: $CLI_DIRS"
+          if [ -n "$CLI_DIRS" ]; then echo "CLI recipe dirs: $CLI_DIRS"; fi
 
   # ── Python ────────────────────────────────────────────────────────────────
   test-python:
