@@ -4,7 +4,6 @@
  * Each segment has a sentiment value and confidence score plus the text.
  * See also: topics for topic detection, intents for intent recognition
  */
-import DeepgramClient;
 import java.util.Collections;
 import resources.listen.v1.media.requests.ListenV1RequestUrl;
 import resources.listen.v1.media.types.MediaTranscribeRequestModel;

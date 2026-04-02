@@ -4,7 +4,6 @@
  * The summary is returned as a short text string alongside the full transcript.
  * See also: topics for topic detection, intents for intent recognition
  */
-import DeepgramClient;
 import resources.listen.v1.media.requests.ListenV1RequestUrl;
 import resources.listen.v1.media.types.MediaTranscribeRequestModel;
 import resources.listen.v1.media.types.MediaTranscribeResponse;

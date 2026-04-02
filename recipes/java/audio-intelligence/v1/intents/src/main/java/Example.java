@@ -3,7 +3,6 @@
  * Detects speaker intents from audio context with confidence scores.
  * See also: topics, sentiment, summarize for other intelligence features
  */
-import DeepgramClient;
 import java.util.Collections;
 import resources.listen.v1.media.requests.ListenV1RequestUrl;
 import resources.listen.v1.media.types.MediaTranscribeRequestModel;

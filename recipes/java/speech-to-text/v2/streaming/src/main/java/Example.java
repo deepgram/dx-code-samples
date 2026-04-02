@@ -4,7 +4,6 @@
  * V2 provides turn info events instead of interim/final results.
  * See also: speech-to-text/v1/streaming for V1 API
  */
-import DeepgramClient;
 import java.net.URI;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;

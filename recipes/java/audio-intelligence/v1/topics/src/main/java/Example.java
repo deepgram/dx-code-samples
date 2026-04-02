@@ -3,7 +3,6 @@
  * Identifies key topics discussed in audio content with confidence scores.
  * See also: intents, sentiment, summarize for other intelligence features
  */
-import DeepgramClient;
 import java.util.Collections;
 import resources.listen.v1.media.requests.ListenV1RequestUrl;
 import resources.listen.v1.media.types.MediaTranscribeRequestModel;

@@ -4,7 +4,6 @@
  * Each word in the transcript gets a speaker label (speaker 0, 1, 2...).
  * See also: utterances for segment-level timing, paragraphs for grouping
  */
-import DeepgramClient;
 import java.util.Collections;
 import resources.listen.v1.media.requests.ListenV1RequestUrl;
 import resources.listen.v1.media.types.MediaTranscribeRequestModel;

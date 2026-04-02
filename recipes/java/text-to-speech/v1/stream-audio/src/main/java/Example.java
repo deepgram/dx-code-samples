@@ -4,7 +4,6 @@
  * Useful for low-latency playback where you process audio as it arrives.
  * See also: generate-audio for simple file save, websocket-streaming for WS
  */
-import DeepgramClient;
 import java.io.InputStream;
 import resources.speak.v1.audio.requests.SpeakV1Request;
 

@@ -3,7 +3,6 @@
  * Choose a specific aura-2 voice model for agent speech output.
  * See also: connect for basic setup, custom-llm for LLM selection
  */
-import DeepgramClient;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import resources.agent.v1.types.*;

@@ -4,7 +4,6 @@
  * Default: aura-2-thalia-en. Other options: aura-2-arcas-en, aura-2-asteria-en, etc.
  * See also: select-encoding for audio format options, generate-audio for basics
  */
-import DeepgramClient;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;

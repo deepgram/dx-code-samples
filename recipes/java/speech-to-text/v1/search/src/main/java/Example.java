@@ -4,7 +4,6 @@
  * Search results include hit positions with start/end times.
  * See also: keywords for boosting accuracy of specific terms
  */
-import DeepgramClient;
 import java.util.Collections;
 import java.util.List;
 import resources.listen.v1.media.requests.ListenV1RequestUrl;

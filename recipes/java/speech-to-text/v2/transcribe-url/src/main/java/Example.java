@@ -4,7 +4,6 @@
  * The v2 model is accessed via the v1 REST endpoint with model="flux-general-en".
  * See also: speech-to-text/v1/transcribe-url for Nova-3, v2/streaming for WebSocket
  */
-import DeepgramClient;
 import java.util.Collections;
 import resources.listen.v1.media.requests.ListenV1RequestUrl;
 import resources.listen.v1.media.types.MediaTranscribeRequestModel;

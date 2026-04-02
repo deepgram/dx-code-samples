@@ -3,7 +3,6 @@
  * Download and transcribe an audio file using byte array upload.
  * See also: transcribe-url for URL-based transcription
  */
-import DeepgramClient;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;

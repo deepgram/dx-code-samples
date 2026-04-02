@@ -6,7 +6,6 @@
  * smart_format is a superset of punctuate + numerals.
  * See also: punctuate for punctuation-only formatting
  */
-import DeepgramClient;
 import java.util.Collections;
 import resources.listen.v1.media.requests.ListenV1RequestUrl;
 import resources.listen.v1.media.types.MediaTranscribeRequestModel;

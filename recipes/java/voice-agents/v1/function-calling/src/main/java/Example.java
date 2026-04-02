@@ -4,7 +4,6 @@
  * The LLM can invoke defined functions during conversation.
  * See also: connect for basic setup, custom-llm for provider selection
  */
-import DeepgramClient;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import resources.agent.v1.types.*;

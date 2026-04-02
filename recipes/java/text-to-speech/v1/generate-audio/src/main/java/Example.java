@@ -4,7 +4,6 @@
  * generate() returns an InputStream of audio bytes.
  * See also: stream-audio, websocket-streaming, select-model, select-encoding
  */
-import DeepgramClient;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;

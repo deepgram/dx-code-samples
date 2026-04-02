@@ -4,7 +4,6 @@
  * Redacted content appears as [REDACTED] in the transcript text.
  * See also: detect-entities for entity identification without redaction
  */
-import DeepgramClient;
 import java.util.Collections;
 import java.util.List;
 import resources.listen.v1.media.requests.ListenV1RequestUrl;

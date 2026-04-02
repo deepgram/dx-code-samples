@@ -4,7 +4,6 @@
  * The detected language code appears in the channel metadata.
  * See also: transcribe-url for basic transcription
  */
-import DeepgramClient;
 import java.util.Collections;
 import resources.listen.v1.media.requests.ListenV1RequestUrl;
 import resources.listen.v1.media.types.MediaTranscribeRequestModel;
