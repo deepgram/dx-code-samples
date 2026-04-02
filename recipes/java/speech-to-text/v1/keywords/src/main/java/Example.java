@@ -5,7 +5,6 @@
  * The transcript itself doesn't change structurally — accuracy improves.
  * See also: search for finding specific terms with confidence scores
  */
-import DeepgramClient;
 import java.util.Collections;
 import java.util.List;
 import resources.listen.v1.media.requests.ListenV1RequestUrl;

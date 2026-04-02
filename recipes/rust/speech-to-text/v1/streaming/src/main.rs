@@ -16,6 +16,9 @@ static FRAME_DELAY: Duration = Duration::from_millis(16);
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    // rustls 0.23+ requires a CryptoProvider to be installed before TLS connections
+    let _ = rustls::crypto::ring::default_provider().install_default();
+
     let api_key = env::var("DEEPGRAM_API_KEY")?;
     let dg = Deepgram::new(&api_key)?;
 

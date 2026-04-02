@@ -4,7 +4,6 @@
  * The agent greets and waits for audio input.
  * See also: custom-llm, custom-tts, function-calling
  */
-import DeepgramClient;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import resources.agent.v1.types.*;

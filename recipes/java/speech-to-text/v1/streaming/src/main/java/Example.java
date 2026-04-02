@@ -3,7 +3,6 @@
  * WebSocket-based real-time transcription. Streams a file to simulate live audio.
  * See also: streaming-file, transcribe-url for pre-recorded
  */
-import DeepgramClient;
 import java.net.URI;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;

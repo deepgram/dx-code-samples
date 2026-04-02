@@ -21,7 +21,7 @@ var response = await client.TranscribeUrl(
     new PreRecordedSchema()
     {
         Model = "nova-3",
-        Multichannel = true,  // <-- THIS is the feature this recipe demonstrates
+        MultiChannel = true,  // <-- THIS is the feature this recipe demonstrates
         SmartFormat = true,
     });
 

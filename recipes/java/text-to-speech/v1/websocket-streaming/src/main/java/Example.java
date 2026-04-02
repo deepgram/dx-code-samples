@@ -4,7 +4,6 @@
  * Send text chunks, receive audio data in real time.
  * See also: generate-audio for REST, stream-audio for REST streaming
  */
-import DeepgramClient;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;

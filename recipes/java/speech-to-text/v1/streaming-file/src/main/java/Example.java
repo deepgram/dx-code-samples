@@ -4,7 +4,6 @@
  * This downloads a demo file then streams it in chunks.
  * See also: streaming for live mic input, transcribe-file for REST upload
  */
-import DeepgramClient;
 import java.net.URI;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;

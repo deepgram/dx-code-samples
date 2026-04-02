@@ -4,7 +4,6 @@
  * Different encodings suit different use cases (streaming, file storage, telephony).
  * See also: select-model for voice options, generate-audio for basics
  */
-import DeepgramClient;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;

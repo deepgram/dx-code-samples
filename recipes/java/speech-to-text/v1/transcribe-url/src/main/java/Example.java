@@ -4,7 +4,6 @@
  * This is the foundation recipe — all other STT recipes build on this pattern.
  * See also: transcribe-file, smart-format, paragraphs, diarize
  */
-import DeepgramClient;
 import java.util.Collections;
 import resources.listen.v1.media.requests.ListenV1RequestUrl;
 import resources.listen.v1.media.types.MediaTranscribeRequestModel;

@@ -4,7 +4,6 @@
  * Each utterance represents a continuous speech segment.
  * See also: paragraphs for paragraph-based grouping, diarize for speaker labels
  */
-import DeepgramClient;
 import java.util.Collections;
 import resources.listen.v1.media.requests.ListenV1RequestUrl;
 import resources.listen.v1.media.types.MediaTranscribeRequestModel;

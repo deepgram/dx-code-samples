@@ -6,7 +6,6 @@
  * Paragraphs may be absent if audio is too short.
  * See also: utterances for speaker-turn-based segmentation
  */
-import DeepgramClient;
 import java.util.Collections;
 import resources.listen.v1.media.requests.ListenV1RequestUrl;
 import resources.listen.v1.media.types.MediaTranscribeRequestModel;

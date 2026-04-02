@@ -4,7 +4,6 @@
  * Uses the speech-to-text API with summarize="v2" to produce a summary.
  * See also: speech-to-text/v1/summarize (same feature via STT)
  */
-import DeepgramClient;
 import resources.listen.v1.media.requests.ListenV1RequestUrl;
 import resources.listen.v1.media.types.MediaTranscribeRequestModel;
 import resources.listen.v1.media.types.MediaTranscribeResponse;

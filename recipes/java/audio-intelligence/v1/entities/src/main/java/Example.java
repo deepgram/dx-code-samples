@@ -3,7 +3,6 @@
  * Identifies named entities: people, organisations, locations in audio.
  * See also: topics, sentiment for other intelligence features
  */
-import DeepgramClient;
 import java.util.Collections;
 import resources.listen.v1.media.requests.ListenV1RequestUrl;
 import resources.listen.v1.media.types.MediaTranscribeRequestModel;

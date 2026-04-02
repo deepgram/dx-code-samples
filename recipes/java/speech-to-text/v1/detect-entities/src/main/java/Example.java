@@ -4,7 +4,6 @@
  * Each entity has a label, value, and confidence score.
  * See also: topics for topic detection, sentiment for sentiment analysis
  */
-import DeepgramClient;
 import java.util.Collections;
 import resources.listen.v1.media.requests.ListenV1RequestUrl;
 import resources.listen.v1.media.types.MediaTranscribeRequestModel;

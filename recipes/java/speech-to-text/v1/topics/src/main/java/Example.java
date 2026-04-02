@@ -4,7 +4,6 @@
  * Each segment gets a list of topics with confidence scores.
  * See also: intents for intent recognition, summarize for summaries
  */
-import DeepgramClient;
 import java.util.Collections;
 import resources.listen.v1.media.requests.ListenV1RequestUrl;
 import resources.listen.v1.media.types.MediaTranscribeRequestModel;
