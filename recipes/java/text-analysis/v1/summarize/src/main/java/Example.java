@@ -25,6 +25,7 @@ public class Example {
             + "integrate Deepgram into their applications using SDKs for Python, JavaScript, "
             + "Go, .NET, and other languages.";
 
+        System.out.println("Analyzing: " + text.substring(0, Math.min(80, text.length())));
         ReadV1Response response = client.read().v1().text().analyze(
             TextAnalyzeRequest.builder()
                 .body(ReadV1Request.of(ReadV1RequestText.builder().text(text).build()))
