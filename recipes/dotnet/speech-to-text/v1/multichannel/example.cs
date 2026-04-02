@@ -26,13 +26,19 @@ var response = await client.TranscribeUrl(
     });
 
 // When Multichannel=true, response.Results.Channels is an array
-var channels = response.Results.Channels;
+var channels = response.Results?.Channels;
+if (channels == null || channels.Count == 0)
+{
+    Console.WriteLine("No channels in response.");
+    Library.Terminate();
+    return;
+}
 
 Console.WriteLine($"Found {channels.Count} audio channel(s):\n");
 
 for (int i = 0; i < channels.Count; i++)
 {
-    var transcript = channels[i].Alternatives[0].Transcript;
+    var transcript = channels[i].Alternatives?[0]?.Transcript ?? "";
     Console.WriteLine($"Channel {i}: {transcript}");
 }
 
