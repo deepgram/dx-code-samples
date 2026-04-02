@@ -330,6 +330,13 @@ jobs:
 
       - name: Evaluate language test results
         run: |
+          # If detect itself failed, block the merge — don't let everything skipping look like a pass
+          detect_result="${{ needs.detect.result }}"
+          if [ "$detect_result" = "failure" ] || [ "$detect_result" = "cancelled" ]; then
+            echo "❌ detect job $detect_result — cannot determine what changed"
+            exit 1
+          fi
+
           results=(
             "python:${{ needs.test-python.result }}"
             "javascript:${{ needs.test-javascript.result }}"
