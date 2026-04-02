@@ -216,11 +216,9 @@ PR_URL=$(gh pr create \
 Closes part of #{issue_number}")
 
 # Bot-created PRs don't fire pull_request events (GitHub blocks workflow-to-workflow
-# propagation). Merge main into the branch to trigger the synchronize event and start CI.
-gh api repos/deepgram/recipes/merges \
-  -f base="$BRANCH" \
-  -f head="main" \
-  -f commit_message="chore: trigger CI" 2>/dev/null || true
+# propagation). Push an empty commit to trigger the synchronize event and start CI.
+git commit --allow-empty -m "chore: trigger CI"
+git push origin "$BRANCH"
 ```
 
 A human will review the CI results and merge.
