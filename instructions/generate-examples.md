@@ -325,10 +325,28 @@ dg listen audio.wav --summarize --topics --intents --sentiment --model nova-3
 **Standard test pattern (`example_test.sh`):**
 ```bash
 #!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+# set +e guards against bash 5.x exiting silently on non-zero command substitution
+set +e
+output=$(bash "$SCRIPT_DIR/example.sh" 2>&1)
+status=$?
 set -e
-OUTPUT=$(bash example.sh)
-[ -z "$OUTPUT" ] && echo "FAIL: no output" && exit 1
-echo "PASS: $OUTPUT"
+
+if [ $status -ne 0 ]; then
+  echo "FAIL: example.sh exited with status $status"
+  echo "$output"
+  exit 1
+fi
+
+if [ -z "$output" ]; then
+  echo "FAIL: example.sh produced no output"
+  exit 1
+fi
+
+echo "PASS"
+echo "$output" | head -3
 ```
 
 NEVER use curl in CLI recipes. If you find yourself writing a curl command,
