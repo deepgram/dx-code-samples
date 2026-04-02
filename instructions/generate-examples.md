@@ -216,9 +216,9 @@ PR_URL=$(gh pr create \
 Closes part of #{issue_number}")
 
 # Bot-created PRs don't fire pull_request events (GitHub blocks workflow-to-workflow
-# propagation). Push an empty commit to trigger the synchronize event and start CI.
-git commit --allow-empty -m "chore: trigger CI"
-git push origin "$BRANCH"
+# propagation). Dispatch the test workflow directly — it will find the open PR by
+# branch name and post results as a comment.
+gh workflow run lead-test.yml --ref "$BRANCH" || true
 ```
 
 A human will review the CI results and merge.
