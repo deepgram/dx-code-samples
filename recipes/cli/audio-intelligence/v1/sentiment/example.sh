@@ -13,7 +13,17 @@ dg listen "$AUDIO_URL" \
   | python3 -c "
 import sys, json
 r = json.load(sys.stdin)
-for seg in r['results']['sentiments']['segments']:
-    s = seg['sentiment']
-    print(f'{s}: {seg[\"text\"][:80]}')
+transcript = r['results']['channels'][0]['alternatives'][0]['transcript']
+print(transcript[:200])
+
+segments = r.get('results', {}).get('sentiments', {}).get('segments', [])
+if segments:
+    print()
+    print('Sentiments:')
+    for seg in segments:
+        label = seg.get('sentiment', 'unknown')
+        text = seg.get('text', '')
+        print(f'{label}: {text[:80]}')
+else:
+    print('(no sentiment segments detected)')
 "
