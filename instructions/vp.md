@@ -87,7 +87,7 @@ Check which stage each PR is stuck at:
 ## Step 4: Escalate if stuck >3 re-triggers
 
 ```bash
-gh pr comment {number} --body "@deepgram-devrel — VP escalation: PR #{number} has been stuck for >4 hours and re-trigger attempts have not resolved it. Manual review needed.
+gh pr comment {number} --body "@devrel — VP escalation: PR #{number} has been stuck for >4 hours and re-trigger attempts have not resolved it. Manual review needed.
 
 State: {labels + check status summary}"
 ```

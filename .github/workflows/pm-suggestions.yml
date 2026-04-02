@@ -100,7 +100,7 @@ jobs:
           gh issue edit "$ISSUE" --repo ${{ github.repository }} \
             --add-label "needs:approval" 2>/dev/null || true
 
-          BODY="@deepgram-devrel — new suggestion from @${USERNAME} (no write access). Add the \`approved\` label to process it, or close to decline."
+          BODY="@devrel — new suggestion from @${USERNAME} (no write access). Add the \`approved\` label to process it, or close to decline."
           gh issue comment "$ISSUE" --repo ${{ github.repository }} --body "$BODY"
 
       # ── Pass: run PM agent ────────────────────────────────────────────
