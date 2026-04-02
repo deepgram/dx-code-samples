@@ -22,6 +22,7 @@ public class Example {
             + "However, the shipping was terrible and took three weeks to arrive. "
             + "Overall, I'm satisfied with my purchase despite the delivery issues.";
 
+        System.out.println("Analyzing: " + text.substring(0, Math.min(80, text.length())));
         ReadV1Response response = client.read().v1().text().analyze(
             TextAnalyzeRequest.builder()
                 .body(ReadV1Request.of(ReadV1RequestText.builder().text(text).build()))
