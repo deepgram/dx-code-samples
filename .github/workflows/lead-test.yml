@@ -56,12 +56,10 @@ jobs:
       - name: Detect changed languages
         id: scan
         run: |
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
-            CHANGED=$(git diff origin/main...HEAD --name-only 2>/dev/null | grep '^recipes/' || true)
-          else
-            # workflow_dispatch: treat all languages as changed
-            CHANGED=$(find recipes -mindepth 1 -maxdepth 1 -type d | sed 's|.*/||' | while read l; do echo "recipes/$l/x"; done)
-          fi
+          # Always diff against origin/main — works for both pull_request and
+          # workflow_dispatch (where ref points to a specific branch/SHA).
+          # If no recipes/** changed, all has_* outputs are false and tests skip.
+          CHANGED=$(git diff origin/main...HEAD --name-only 2>/dev/null | grep '^recipes/' || true)
 
           for lang in python javascript go dotnet java rust cli; do
             if echo "$CHANGED" | grep -q "^recipes/${lang}/"; then
@@ -72,14 +70,10 @@ jobs:
             fi
           done
 
-          # For CLI: identify the specific recipe dirs to test (scoped to changed recipes on PR)
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
-            CLI_DIRS=$(echo "$CHANGED" | grep '^recipes/cli/' | cut -d/ -f1-5 | sort -u | tr '\n' ' ' | xargs)
-          else
-            CLI_DIRS=$(find recipes/cli -name "example_test.sh" -exec dirname {} \; 2>/dev/null | sort | tr '\n' ' ' | xargs || echo "")
-          fi
+          # CLI: scope test to only the recipe dirs that changed on this branch
+          CLI_DIRS=$(echo "$CHANGED" | grep '^recipes/cli/' | cut -d/ -f1-5 | sort -u | tr '\n' ' ' | xargs || true)
           echo "cli_recipe_dirs=${CLI_DIRS}" >> $GITHUB_OUTPUT
-          [ -n "$CLI_DIRS" ] && echo "CLI recipe dirs: $CLI_DIRS"
+          if [ -n "$CLI_DIRS" ]; then echo "CLI recipe dirs: $CLI_DIRS"; fi
 
   # ── Python ────────────────────────────────────────────────────────────────
   test-python:
@@ -330,6 +324,13 @@ jobs:
 
       - name: Evaluate language test results
         run: |
+          # If detect itself failed, block the merge — don't let everything skipping look like a pass
+          detect_result="${{ needs.detect.result }}"
+          if [ "$detect_result" = "failure" ] || [ "$detect_result" = "cancelled" ]; then
+            echo "❌ detect job $detect_result — cannot determine what changed"
+            exit 1
+          fi
+
           results=(
             "python:${{ needs.test-python.result }}"
             "javascript:${{ needs.test-javascript.result }}"
