@@ -14,7 +14,20 @@ dg listen "$AUDIO_URL" \
   | python3 -c "
 import sys, json
 r = json.load(sys.stdin)
-for seg in r['results']['intents']['segments']:
-    for i in seg['intents']:
-        print(f'{i[\"intent\"]} (confidence: {i[\"confidence_score\"]:.2f})')
+transcript = r['results']['channels'][0]['alternatives'][0]['transcript']
+print(transcript[:200])
+
+segments = r.get('results', {}).get('intents', {}).get('segments', [])
+found = False
+for seg in segments:
+    for i in seg.get('intents', []):
+        if not found:
+            print()
+            print('Intents:')
+            found = True
+        label = i.get('intent', 'unknown')
+        conf = i.get('confidence_score', 0)
+        print(f'{label} (confidence: {conf:.2f})')
+if not found:
+    print('(no intents detected in this audio)')
 "
