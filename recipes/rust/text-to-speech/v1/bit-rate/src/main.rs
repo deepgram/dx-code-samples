@@ -18,7 +18,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .model(SpeakModel::CustomId(String::from("aura-2-thalia-en")))
         .encoding(SpeakEncoding::Mp3)
         .bit_rate(48000)  // <-- Controls output bit rate (48 kbps)
-        .container(Container::None)
         .build();
 
     println!("Generating MP3 audio with 48 kbps bit rate...");
