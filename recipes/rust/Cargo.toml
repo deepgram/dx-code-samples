@@ -35,7 +35,8 @@ members = [
   "voice-agents/v1/connect",
   "voice-agents/v1/custom-llm",
   "voice-agents/v1/custom-tts",
-  "voice-agents\/v1\/function-calling",\n  "speech-to-text/v1/measurements",
+  "voice-agents/v1/function-calling",
+  "speech-to-text/v1/filler-words",
 ]
 
 [workspace.package]
