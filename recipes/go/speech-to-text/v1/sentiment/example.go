@@ -37,7 +37,15 @@ func main() {
 
 	if res.Results.Sentiments != nil {
 		for _, seg := range res.Results.Sentiments.Segments {
-			fmt.Printf("[%s] (%.2f) %s\n", seg.Sentiment, seg.SentimentScore, seg.Text)
+			sentiment := ""
+			if seg.Sentiment != nil {
+				sentiment = *seg.Sentiment
+			}
+			score := 0.0
+			if seg.SentimentScore != nil {
+				score = *seg.SentimentScore
+			}
+			fmt.Printf("[%s] (%.2f) %s\n", sentiment, score, seg.Text)
 		}
 	} else {
 		fmt.Println("No sentiment data available")
