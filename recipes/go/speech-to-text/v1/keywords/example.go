@@ -21,7 +21,7 @@ func main() {
 	dg := api.New(c)
 
 	options := &interfaces.PreRecordedTranscriptionOptions{
-		Model:    "nova-3",
+		Model:    "nova-2",
 		Keywords: []string{"spacewalk:2", "ISS:1.5"}, // <-- THIS is the feature this recipe demonstrates
 		// Also try: Keyterm: []string{"deepgram"}, Search: []string{"spacewalk"}
 	}
